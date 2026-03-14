@@ -10,6 +10,7 @@ const AdminDashboard = () => {
   const {projectData} = useSelector(state=>state.project)
   console.log(projectData)
   const {userData} = useSelector(state=>state.user)
+  const {users} = useSelector(state=>state.user)
   const {tasks} = useSelector(state=>state.task)
   const firstLetter = userData?.name?.charAt(0).toUpperCase()
    const navigate = useNavigate()
@@ -76,12 +77,12 @@ const AdminDashboard = () => {
 
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-gray-500">Total Tasks</h3>
-              <p className="text-2xl font-bold">{tasks.length}</p>
+              <p className="text-2xl font-bold">{projectData.length}</p>
             </div>
 
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-gray-500">Team Members</h3>
-              <p className="text-2xl font-bold">{projectData.members}</p>
+              <p className="text-2xl font-bold">{users.length}</p>
             </div>
 
           </div>
