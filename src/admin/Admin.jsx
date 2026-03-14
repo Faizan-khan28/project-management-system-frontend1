@@ -9,13 +9,14 @@ const AdminDashboard = () => {
 
   const {projectData} = useSelector(state=>state.project)
   console.log(projectData)
-
+  const {userData} = useSelector(state=>state.user)
+  const {tasks} = useSelector(state=>state.task)
+  const firstLetter = userData?.name?.charAt(0).toUpperCase()
    const navigate = useNavigate()
    const dispatch = useDispatch()
 
    const handleLogout = async () => {
     try {
-
       await axios.get(`${serverUrl}/api/auth/logout`, {
         withCredentials: true
       })
@@ -27,6 +28,12 @@ const AdminDashboard = () => {
       console.log(error)
     }
   }
+
+  const getStatusColor = (status) => {
+  if (status === "Pending") return "text-yellow-500";
+  if (status === "Active") return "text-blue-500";
+  if (status === "Completed") return "text-green-500";
+};
 
 
   return (
@@ -50,14 +57,8 @@ const AdminDashboard = () => {
              + Log Out
            </button>
 
-            <input
-              type="text"
-              placeholder="Search..."
-              className="border px-3 py-1 rounded-md"
-            />
-
             <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-              A
+             {firstLetter}
             </div>
           </div>
 
@@ -75,7 +76,7 @@ const AdminDashboard = () => {
 
             <div className="bg-white shadow rounded-lg p-6">
               <h3 className="text-gray-500">Total Tasks</h3>
-              <p className="text-2xl font-bold">45</p>
+              <p className="text-2xl font-bold">{tasks.length}</p>
             </div>
 
             <div className="bg-white shadow rounded-lg p-6">
@@ -99,6 +100,8 @@ const AdminDashboard = () => {
                     <th>Status</th>
                     <th>Start Date</th>
                     <th>End Date</th>
+                    <th>View Task</th>
+                    <th>Create Task</th>
                   </tr>
                 </thead>
 
@@ -106,11 +109,24 @@ const AdminDashboard = () => {
 
                   {
                     projectData && projectData.map((project)=> (
-                      <tr key={project.id} className="border-b">
-                      <td className="py-2">{project.projectName}</td>
-                      <td className="text-yellow-500">{project.status}</td>
-                      <td>{project.startDate}</td>
-                      <td>{project.endDate}</td>
+                      <tr key={project._id} className="border-b">
+                       <td className="py-2">{project.projectName}</td>
+                       <td className={`${getStatusColor(project.status)} text-white text-sm`}>{project.status}</td>
+                       <td>{project.startDate}</td>
+                       <td>{project.endDate}</td>
+                       <td>
+                         <button
+                         onClick={()=> navigate(`/project/${project._id}`)}
+                          className=" bg-blue-600 py-1 px-2 rounded-xl text-white"
+                         >
+                          View Tasks
+                         </button>
+                        </td>
+                        <td>
+                          <button className=" bg-blue-600 py-1 px-2 rounded-xl text-white" onClick={()=>navigate(`/create-task/${project._id}`)}>
+                           Create Task
+                          </button>
+                        </td>
                      </tr>
                     ))
                   }
